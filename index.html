@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>Secrets de banquière - Simulateur d’épargne</title>
+<title>Secrets de banquière - Simulateur de budget</title>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,43 +33,49 @@ html,body{
   }
 }
 
-h1{font-size:24px;font-weight:800;margin:20px 0 10px}
-p{color:var(--muted);font-size:14px;margin-bottom:24px;padding:0 10px}
-.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+h1{font-size:22px;font-weight:800;margin:16px 0 6px}
+p{color:var(--muted);font-size:13px;margin-bottom:16px;padding:0 10px}
+.wrap{max-width:980px;margin:0 auto;padding:0 12px}
 
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-bottom:10px;
+}
 @media(max-width:700px){
   .grid:first-of-type{grid-template-columns:1fr 1fr}
   .grid:last-of-type{grid-template-columns:1fr}
 }
 
-/* Cartes principales */
+/* Cartes */
 .card{
   background:var(--card);
   border:1px solid var(--border);
-  border-radius:16px;
+  border-radius:14px;
   box-shadow:var(--shadow);
-  padding:16px;
-  min-height:200px; /* ↓ Réduction des cartes du haut */
+  padding:12px;
+  min-height:160px; /* ← plus compact */
   display:flex;
   flex-direction:column;
   justify-content:flex-start;
 }
-.bar{height:6px;border-radius:10px;margin-bottom:8px}
+.bar{height:5px;border-radius:8px;margin-bottom:6px}
 .revenu{background:#bafce1}.loisir{background:#8fd3ff}
 .dep{background:#ff9ca6}.eparg{background:#d7c3ff}
-h2{font-size:17px;margin:6px 0 10px;font-weight:800}
+h2{font-size:16px;margin:4px 0 8px;font-weight:800}
 
-label{display:block;font-size:13px;font-weight:600;color:var(--muted);
-  margin-bottom:4px;text-align:left;margin-left:10%}
-.input{display:flex;align-items:center;justify-content:center;gap:6px;
-  border:1px solid var(--border);border-radius:10px;padding:10px 12px;
-  background:#fff;box-shadow:var(--shadow);margin:6px auto;width:90%;
-  font-size:16px !important;-webkit-text-size-adjust:100%;
+label{display:block;font-size:12px;font-weight:600;color:var(--muted);
+  margin-bottom:3px;text-align:left;margin-left:8%}
+.input{
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  border:1px solid var(--border);border-radius:10px;padding:8px 10px;
+  background:#fff;box-shadow:var(--shadow);margin:4px auto;width:90%;
+  font-size:15px !important;-webkit-text-size-adjust:100%;
 }
 .input span{color:#a28abf;font-weight:600}
 .input input{
-  border:0;outline:0;width:100%;font-size:16px !important;
+  border:0;outline:0;width:100%;font-size:15px !important;
   text-align:center;font-weight:400;background:transparent;
   -webkit-text-size-adjust:100%;
 }
@@ -79,24 +85,24 @@ label{display:block;font-size:13px;font-weight:600;color:var(--muted);
   background:#f4f4f4;color:#555;border-radius:10px;
   display:flex;align-items:center;justify-content:center;
   font-size:10px;
-  padding:10px 6px;
-  height:54px; /* ↑ même hauteur que les inputs */
+  padding:8px 6px;
+  height:44px; /* même taille que les champs */
   width:90%;
-  margin:0 auto 8px auto;
+  margin:0 auto 6px auto;
   line-height:1.3;
 }
 
-.total{font-weight:800;margin-top:auto;font-size:16px}
+.total{font-weight:800;margin-top:auto;font-size:15px}
 .ok{color:var(--ok)} .warn{color:var(--warn)}
 
 /* Barres colorées */
 .progress{
-  display:flex;margin:22px auto;max-width:500px;border-radius:8px;overflow:hidden;
-  font-weight:600;color:#111;font-size:12px;text-align:center;
+  display:flex;margin:14px auto 10px auto;max-width:500px;border-radius:8px;overflow:hidden;
+  font-weight:600;color:#111;font-size:11px;text-align:center;
   border:1px solid var(--border);background:#fff;box-shadow:var(--shadow)
 }
 .progress div{
-  flex:0 0 auto;padding:6px 0;
+  flex:0 0 auto;padding:5px 0;
   transition:width .8s ease-in-out, background-color .8s ease-in-out, opacity .3s ease-in-out;
   white-space:nowrap;overflow:hidden;color:#111;
 }
@@ -105,23 +111,23 @@ label{display:block;font-size:13px;font-weight:600;color:var(--muted);
 .epbg{background:#b89cff}
 .errorbar{background:var(--warn)!important;color:#fff}
 
-.footer-cta{display:flex;justify-content:center;margin-top:14px}
-a.cta{text-decoration:none;background:var(--accent);color:#fff;padding:12px 16px;border-radius:12px;
+.footer-cta{display:flex;justify-content:center;margin-top:10px}
+a.cta{text-decoration:none;background:var(--accent);color:#fff;padding:10px 14px;border-radius:12px;
   font-weight:800;display:inline-block;text-align:center;box-shadow:var(--shadow);
   white-space:nowrap;transition:.2s ease}
 a.cta:hover{background:#e54b9b}
-.footer-bottom{display:flex;justify-content:center;align-items:center;margin-top:10px}
-.reset{border:1px solid var(--border);border-radius:12px;padding:10px 12px;color:#4d4860;background:#fff;
+.footer-bottom{display:flex;justify-content:center;align-items:center;margin-top:6px}
+.reset{border:1px solid var(--border);border-radius:12px;padding:8px 10px;color:#4d4860;background:#fff;
   cursor:pointer;font-weight:700;display:inline-flex;gap:8px;align-items:center;transition:.2s ease}
 .reset:hover{box-shadow:var(--shadow-strong)}
-.ig{margin-top:10px;text-align:center;font-size:12px;color:#222}
+.ig{margin-top:8px;text-align:center;font-size:11px;color:#222}
 .ig a{color:#222;text-decoration:none}
 </style>
 </head>
 
 <body>
 <div class="wrap">
-  <h1>Simulateur d’épargne</h1>
+  <h1>Simulateur de budget</h1>
   <p>Visualisez la répartition de votre budget entre dépenses, épargnes et reste à vivre.</p>
 
   <div class="grid">
@@ -193,11 +199,8 @@ function updateCalcul(){
   setBar(depPct,"Dépenses",dpct);setBar(epPct,"Épargnes",epct);setBar(loiPct,"Reste à vivre",lpct);
 }
 
-// Fermer clavier au clic extérieur
 document.addEventListener('touchstart', function(e) {
-  if (!e.target.closest('.input')) {
-    document.activeElement.blur();
-  }
+  if (!e.target.closest('.input')) document.activeElement.blur();
 }, false);
 
 ["revenu","depFixes","depVar","depProv","epUrg","epImp","epProj"].forEach(id=>{
