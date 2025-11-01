@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Secrets de banquière - Simulateur d’épargne</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -20,6 +21,15 @@ html,body{
   margin:0;color:var(--text);
   background:linear-gradient(180deg,#fff 0%,#ffe9f1 60%,#fff6fb 100%);
   text-align:center;
+}
+@media (max-width:768px){
+  html,body{
+    height:100%;
+    overflow-x:hidden;
+    overscroll-behavior:contain;
+    position:fixed;
+    width:100%;
+  }
 }
 
 h1{font-size:24px;font-weight:800;margin:20px 0 10px}
@@ -66,8 +76,8 @@ label{display:block;font-size:13px;font-weight:600;color:var(--muted);
   white-space:nowrap;overflow:hidden;color:#111;
 }
 .depbg{background:#ff7c8a}
-.epbg{background:#b89cff}
 .loibg{background:#75caff}
+.epbg{background:#b89cff}
 .errorbar{background:var(--warn)!important;color:#fff}
 
 /* Bloc épargne projetée */
@@ -119,7 +129,7 @@ a.cta:hover{background:#e54b9b}
   <div class="grid">
     <div class="card">
       <div class="bar revenu"></div><h2>Revenus</h2>
-      <div class="input"><span>€</span><input id="revenu" type="number" value="4000"></div>
+      <div class="input"><span>€</span><input id="revenu" inputmode="numeric" pattern="[0-9]*" value="4000"></div>
       <div id="revenuTotal" class="total ok">4 000 €</div>
     </div>
     <div class="card">
@@ -132,24 +142,24 @@ a.cta:hover{background:#e54b9b}
   <div class="grid">
     <div class="card">
       <div class="bar dep"></div><h2>Dépenses</h2>
-      <label>Fixes</label><div class="input"><span>€</span><input id="depFixes" type="number" value="1500"></div>
-      <label>Variables</label><div class="input"><span>€</span><input id="depVar" type="number" value="400"></div>
-      <label>Provisions</label><div class="input"><span>€</span><input id="depProv" type="number" value="100"></div>
+      <label>Fixes</label><div class="input"><span>€</span><input id="depFixes" inputmode="numeric" pattern="[0-9]*" value="1500"></div>
+      <label>Variables</label><div class="input"><span>€</span><input id="depVar" inputmode="numeric" pattern="[0-9]*" value="400"></div>
+      <label>Provisions</label><div class="input"><span>€</span><input id="depProv" inputmode="numeric" pattern="[0-9]*" value="100"></div>
       <div id="depTotal" class="total ok">2 000 €</div>
     </div>
     <div class="card">
       <div class="bar eparg"></div><h2>Épargnes</h2>
-      <label>Fonds d’urgence</label><div class="input"><span>€</span><input id="epUrg" type="number" value="400"></div>
-      <label>Imprévu</label><div class="input"><span>€</span><input id="epImp" type="number" value="300"></div>
-      <label>Projets importants</label><div class="input"><span>€</span><input id="epProj" type="number" value="100"></div>
+      <label>Fonds d’urgence</label><div class="input"><span>€</span><input id="epUrg" inputmode="numeric" pattern="[0-9]*" value="400"></div>
+      <label>Imprévu</label><div class="input"><span>€</span><input id="epImp" inputmode="numeric" pattern="[0-9]*" value="300"></div>
+      <label>Projets importants</label><div class="input"><span>€</span><input id="epProj" inputmode="numeric" pattern="[0-9]*" value="100"></div>
       <div id="epTotal" class="total ok">800 €</div>
     </div>
   </div>
 
   <div class="progress" id="progress">
     <div class="depbg" id="depPct" style="width:50%">Dépenses 50%</div>
-    <div class="epbg" id="epPct" style="width:30%">Épargnes 30%</div>
-    <div class="loibg" id="loiPct" style="width:20%">Reste à vivre 20%</div>
+    <div class="loibg" id="loiPct" style="width:30%">Reste à vivre 30%</div>
+    <div class="epbg" id="epPct" style="width:20%">Épargnes 20%</div>
   </div>
 
   <!-- Carte Épargne projetée -->
