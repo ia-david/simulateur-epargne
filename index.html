@@ -43,8 +43,17 @@ p{color:var(--muted);font-size:14px;margin-bottom:24px;padding:0 10px}
   .grid:last-of-type{grid-template-columns:1fr}
 }
 
-.card{background:var(--card);border:1px solid var(--border);
-  border-radius:16px;box-shadow:var(--shadow);padding:18px}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  padding:18px;
+  min-height:230px; /* même hauteur pour toutes les cartes */
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+}
 .bar{height:6px;border-radius:10px;margin-bottom:8px}
 .revenu{background:#bafce1}.loisir{background:#8fd3ff}
 .dep{background:#ff9ca6}.eparg{background:#d7c3ff}
@@ -67,11 +76,13 @@ label{display:block;font-size:13px;font-weight:600;color:var(--muted);
 .info{
   background:#f4f4f4;color:#555;border-radius:10px;
   display:flex;align-items:center;justify-content:center;
-  font-size:9px !important;
-  margin-bottom:6px;padding:3px 6px;line-height:1.2;
+  font-size:10px;
+  margin-bottom:6px;padding:6px 6px;
+  line-height:1.2;
+  height:40px; /* hauteur fixe pour rester homogène */
 }
 
-.total{font-weight:800;margin-top:8px;font-size:16px}
+.total{font-weight:800;margin-top:auto;font-size:16px}
 .ok{color:var(--ok)} .warn{color:var(--warn)}
 
 /* Barres colorées */
@@ -90,32 +101,6 @@ label{display:block;font-size:13px;font-weight:600;color:var(--muted);
 .epbg{background:#b89cff}
 .errorbar{background:var(--warn)!important;color:#fff}
 
-/* Bloc épargne projetée */
-.proj-card{
-  margin:14px auto 10px;
-  max-width:500px;
-  background:#f9f8fb;
-  border:1px solid var(--border);
-  border-radius:14px;
-  box-shadow:var(--shadow);
-  padding:10px 12px 14px;
-  font-size:13px;
-  opacity:0;
-  transform:translateY(6px);
-  transition:opacity .4s ease, transform .4s ease;
-}
-.proj-card.show{opacity:1;transform:translateY(0)}
-.proj-title{font-weight:700;font-size:13px;color:#2a2234;margin-bottom:6px;
-  display:flex;align-items:center;justify-content:center;gap:6px}
-.proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center}
-.proj-item{padding:6px 4px}
-.proj-item span{display:block;font-size:11px;color:#6a6780;margin-bottom:3px;font-weight:600}
-.proj-item strong{display:block;font-size:14px;color:#17151f;font-weight:700}
-.proj-note{margin-top:6px;font-size:10px;color:#7a768a}
-.slider-wrap{display:flex;align-items:center;justify-content:center;gap:6px;margin:4px 0 10px}
-.slider-wrap input[type=range]{width:100px}
-.slider-wrap span{font-size:12px;color:#444;font-weight:600}
-
 .footer-cta{display:flex;justify-content:center;margin-top:14px}
 a.cta{text-decoration:none;background:var(--accent);color:#fff;padding:12px 16px;border-radius:12px;
   font-weight:800;display:inline-block;text-align:center;box-shadow:var(--shadow);
@@ -127,7 +112,6 @@ a.cta:hover{background:#e54b9b}
 .reset:hover{box-shadow:var(--shadow-strong)}
 .ig{margin-top:10px;text-align:center;font-size:12px;color:#222}
 .ig a{color:#222;text-decoration:none}
-@media(max-width:520px){.proj-grid{grid-template-columns:1fr;}.proj-item strong{font-size:13px}}
 </style>
 </head>
 
@@ -172,22 +156,6 @@ a.cta:hover{background:#e54b9b}
     <div class="epbg" id="epPct" style="width:20%">Épargnes 20%</div>
   </div>
 
-  <!-- Carte Épargne projetée -->
-  <div class="proj-card" id="projCard" style="display:none">
-    <div class="proj-title">💰 Épargne projetée</div>
-    <div class="slider-wrap">
-      <span>Rendement&nbsp;:</span>
-      <input type="range" id="rate" min="0" max="20" step="0.5" value="2">
-      <span id="rateVal">2 %</span>
-    </div>
-    <div class="proj-grid">
-      <div class="proj-item"><span>1 an</span><strong id="p1y">—</strong></div>
-      <div class="proj-item"><span>5 ans</span><strong id="p5y">—</strong></div>
-      <div class="proj-item"><span>10 ans</span><strong id="p10y">—</strong></div>
-    </div>
-    <div class="proj-note">Hypothèse : versement mensuel constant avec rendement annuel composé.</div>
-  </div>
-
   <div class="footer-cta"><a class="cta" href="https://ig.me/m/secrets_de_banquiere" target="_blank">Contactez-moi pour aller plus loin</a></div>
   <div class="footer-bottom"><button class="reset" id="resetBtn">Réinitialiser</button></div>
   <div class="ig"><a href="https://ig.me/m/secrets_de_banquiere" target="_blank">@secrets_de_banquiere</a></div>
@@ -199,7 +167,6 @@ function euro(n){if(isNaN(n))return'—';const neg=n<0;const s=Math.round(Math.a
 function setColor(el,n){el.classList.remove('ok','warn');el.classList.add(n>=0?'ok':'warn');}
 function pct(x,t){if(t<=0)return 0;return Math.max(0,Math.round((x/t)*100));}
 function setBar(el,l,v){el.style.width=v+"%";el.textContent=v>=TEXT_MIN?l+" "+v+"%":"";}
-function compound(monthly,rate,years){if(rate<=0)return monthly*years*12;const r=rate/100/12;return monthly*((Math.pow(1+r,years*12)-1)/r);}
 
 function updateCalcul(){
   const r=+revenu.value||0,df=+depFixes.value||0,dv=+depVar.value||0,dp=+depProv.value||0,eu=+epUrg.value||0,ei=+epImp.value||0,ep=+epProj.value||0;
@@ -209,36 +176,17 @@ function updateCalcul(){
   setColor(depTotal,1);setColor(epTotal,1);setColor(revenuTotal,r);setColor(loisirTotal,l);
   depPct.classList.remove('errorbar');epPct.classList.remove('errorbar');loiPct.classList.remove('errorbar');
 
-  const proj=document.getElementById('projCard');
-
   if(l<0){
     depPct.style.width="0%";depPct.textContent="";
     epPct.style.width="0%";epPct.textContent="";
     loiPct.style.width="100%";loiPct.textContent="⚠️ Reste à vivre négatif";
     loiPct.classList.add('errorbar');
-    proj.classList.remove('show');
-    proj.style.display='none';
     return;
   }
 
   let dpct=pct(d,r),epct=pct(e,r),lpct=pct(l,r);
   if(r>0){const sum=dpct+epct+lpct;if(sum!==100){lpct=Math.max(0,Math.min(100,lpct+(100-sum)));}}
   setBar(depPct,"Dépenses",dpct);setBar(epPct,"Épargnes",epct);setBar(loiPct,"Reste à vivre",lpct);
-
-  const rate=parseFloat(rateInput.value);
-  rateVal.textContent=rate.toFixed(1).replace('.',',')+" %";
-
-  const p1=document.getElementById('p1y'),p5=document.getElementById('p5y'),p10=document.getElementById('p10y');
-  if(e>0){
-    p1.textContent=euro(compound(e,rate,1));
-    p5.textContent=euro(compound(e,rate,5));
-    p10.textContent=euro(compound(e,rate,10));
-    proj.style.display='block';
-    setTimeout(()=>proj.classList.add('show'),20);
-  }else{
-    proj.classList.remove('show');
-    setTimeout(()=>proj.style.display='none',300);
-  }
 }
 
 // Fermer clavier au clic extérieur
@@ -248,8 +196,6 @@ document.addEventListener('touchstart', function(e) {
   }
 }, false);
 
-const rateInput=document.getElementById('rate');
-rateInput.addEventListener('input',updateCalcul);
 ["revenu","depFixes","depVar","depProv","epUrg","epImp","epProj"].forEach(id=>{
   const el=document.getElementById(id);
   el.addEventListener("input",updateCalcul);
@@ -258,7 +204,6 @@ rateInput.addEventListener('input',updateCalcul);
 resetBtn.addEventListener("click",e=>{
   e.preventDefault();
   revenu.value=4000;depFixes.value=1500;depVar.value=400;depProv.value=100;epUrg.value=400;epImp.value=300;epProj.value=100;
-  rateInput.value=2;
   updateCalcul();
 });
 updateCalcul();
