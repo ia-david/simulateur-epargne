@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>Secrets de banquière - Simulateur d’épargne</title>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,11 +55,17 @@ label{display:block;font-size:13px;font-weight:600;color:var(--muted);
   border:1px solid var(--border);border-radius:10px;padding:10px 12px;
   background:#fff;box-shadow:var(--shadow);margin:6px auto;width:90%}
 .input span{color:#a28abf;font-weight:600}
-.input input{border:0;outline:0;width:100%;font-size:14px;
-  text-align:center;font-weight:400;background:transparent}
+.input input{
+  border:0;outline:0;width:100%;font-size:16px;
+  text-align:center;font-weight:400;background:transparent;
+}
 
-.info{background:#f4f4f4;color:#555;border-radius:10px;height:38px;
-  display:flex;align-items:center;justify-content:center;font-size:14px;margin-bottom:6px}
+.info{
+  background:#f4f4f4;color:#555;border-radius:10px;height:38px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px; /* police réduite uniquement ici */
+  margin-bottom:6px;padding:0 6px;line-height:1.3;
+}
 
 .total{font-weight:800;margin-top:8px;font-size:16px}
 .ok{color:var(--ok)} .warn{color:var(--warn)}
@@ -230,6 +236,13 @@ function updateCalcul(){
     setTimeout(()=>proj.style.display='none',300);
   }
 }
+
+// Fermer clavier au clic extérieur
+document.addEventListener('touchstart', function(e) {
+  if (!e.target.closest('.input')) {
+    document.activeElement.blur();
+  }
+}, false);
 
 const rateInput=document.getElementById('rate');
 rateInput.addEventListener('input',updateCalcul);
