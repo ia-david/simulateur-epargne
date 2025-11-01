@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Secrets de banquière - Simulateur d’épargne</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#fff5f9; --card:#ffffff; --text:#17151f; --muted:#68657a;
+  --accent:#ef5da8; --border:#f0e4ef; --ok:#0f9d58; --warn:#d93025;
+  --shadow:0 8px 24px rgba(35,10,30,.06); --shadow-strong:0 14px 34px rgba(35,10,30,.10);
+  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;font-family:var(--font)}
+html,body{
+  margin:0;color:var(--text);
+  background:linear-gradient(180deg,#fff 0%,#ffe9f1 60%,#fff6fb 100%);
+  text-align:center;
+}
+
+h1{font-size:24px;font-weight:800;margin:20px 0 10px}
+p{color:var(--muted);font-size:14px;margin-bottom:24px;padding:0 10px}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:700px){
+  .grid:first-of-type{grid-template-columns:1fr 1fr}
+  .grid:last-of-type{grid-template-columns:1fr}
+}
+
+.card{background:var(--card);border:1px solid var(--border);
+  border-radius:16px;box-shadow:var(--shadow);padding:18px}
+.bar{height:6px;border-radius:10px;margin-bottom:8px}
+.revenu{background:#bafce1}.loisir{background:#8fd3ff}
+.dep{background:#ff9ca6}.eparg{background:#d7c3ff}
+h2{font-size:18px;margin:6px 0 12px;font-weight:800}
+
+label{display:block;font-size:13px;font-weight:600;color:var(--muted);
+  margin-bottom:4px;text-align:left;margin-left:10%}
+.input{display:flex;align-items:center;justify-content:center;gap:6px;
+  border:1px solid var(--border);border-radius:10px;padding:10px 12px;
+  background:#fff;box-shadow:var(--shadow);margin:6px auto;width:90%}
+.input span{color:#a28abf;font-weight:600}
+.input input{border:0;outline:0;width:100%;font-size:14px;
+  text-align:center;font-weight:400;background:transparent}
+
+.info{background:#f4f4f4;color:#555;border-radius:10px;height:38px;
+  display:flex;align-items:center;justify-content:center;font-size:14px;margin-bottom:6px}
+
+.total{font-weight:800;margin-top:8px;font-size:16px}
+.ok{color:var(--ok)} .warn{color:var(--warn)}
+
+/* Barres colorées */
+.progress{
+  display:flex;margin:22px auto;max-width:500px;border-radius:8px;overflow:hidden;
+  font-weight:600;color:#111;font-size:12px;text-align:center;
+  border:1px solid var(--border);background:#fff;box-shadow:var(--shadow)
+}
+.progress div{
+  flex:0 0 auto;padding:6px 0;
+  transition:width .8s ease-in-out, background-color .8s ease-in-out, opacity .3s ease-in-out;
+  white-space:nowrap;overflow:hidden;color:#111;
+}
+.depbg{background:#ff7c8a}
+.epbg{background:#b89cff}
+.loibg{background:#75caff}
+.errorbar{background:var(--warn)!important;color:#fff}
+
+/* Bloc épargne projetée */
+.proj-card{
+  margin:14px auto 10px;
+  max-width:500px;
+  background:#f9f8fb;
+  border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow:var(--shadow);
+  padding:10px 12px 14px;
+  font-size:13px;
+  opacity:0;
+  transform:translateY(6px);
+  transition:opacity .4s ease, transform .4s ease;
+}
+.proj-card.show{opacity:1;transform:translateY(0)}
+.proj-title{font-weight:700;font-size:13px;color:#2a2234;margin-bottom:6px;
+  display:flex;align-items:center;justify-content:center;gap:6px}
+.proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center}
+.proj-item{padding:6px 4px}
+.proj-item span{display:block;font-size:11px;color:#6a6780;margin-bottom:3px;font-weight:600}
+.proj-item strong{display:block;font-size:14px;color:#17151f;font-weight:700}
+.proj-note{margin-top:6px;font-size:10px;color:#7a768a}
+.slider-wrap{display:flex;align-items:center;justify-content:center;gap:6px;margin:4px 0 10px}
+.slider-wrap input[type=range]{width:100px}
+.slider-wrap span{font-size:12px;color:#444;font-weight:600}
+
+.footer-cta{display:flex;justify-content:center;margin-top:14px}
+a.cta{text-decoration:none;background:var(--accent);color:#fff;padding:12px 16px;border-radius:12px;
+  font-weight:800;display:inline-block;text-align:center;box-shadow:var(--shadow);
+  white-space:nowrap;transition:.2s ease}
+a.cta:hover{background:#e54b9b}
+.footer-bottom{display:flex;justify-content:center;align-items:center;margin-top:10px}
+.reset{border:1px solid var(--border);border-radius:12px;padding:10px 12px;color:#4d4860;background:#fff;
+  cursor:pointer;font-weight:700;display:inline-flex;gap:8px;align-items:center;transition:.2s ease}
+.reset:hover{box-shadow:var(--shadow-strong)}
+.ig{margin-top:10px;text-align:center;font-size:12px;color:#222}
+.ig a{color:#222;text-decoration:none}
+@media(max-width:520px){.proj-grid{grid-template-columns:1fr;}.proj-item strong{font-size:13px}}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+  <h1>Simulateur d’épargne</h1>
+  <p>Visualisez la répartition de votre budget entre dépenses, épargnes et reste à vivre.</p>
+
+  <div class="grid">
+    <div class="card">
+      <div class="bar revenu"></div><h2>Revenus</h2>
+      <div class="input"><span>€</span><input id="revenu" type="number" value="4000"></div>
+      <div id="revenuTotal" class="total ok">4 000 €</div>
+    </div>
+    <div class="card">
+      <div class="bar loisir"></div><h2>Reste à vivre</h2>
+      <div class="info">Revenus − (Dépenses + Épargnes)</div>
+      <div id="loisirTotal" class="total ok">800 €</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="bar dep"></div><h2>Dépenses</h2>
+      <label>Fixes</label><div class="input"><span>€</span><input id="depFixes" type="number" value="1500"></div>
+      <label>Variables</label><div class="input"><span>€</span><input id="depVar" type="number" value="400"></div>
+      <label>Provisions</label><div class="input"><span>€</span><input id="depProv" type="number" value="100"></div>
+      <div id="depTotal" class="total ok">2 000 €</div>
+    </div>
+    <div class="card">
+      <div class="bar eparg"></div><h2>Épargnes</h2>
+      <label>Fonds d’urgence</label><div class="input"><span>€</span><input id="epUrg" type="number" value="400"></div>
+      <label>Imprévu</label><div class="input"><span>€</span><input id="epImp" type="number" value="300"></div>
+      <label>Projets importants</label><div class="input"><span>€</span><input id="epProj" type="number" value="100"></div>
+      <div id="epTotal" class="total ok">800 €</div>
+    </div>
+  </div>
+
+  <div class="progress" id="progress">
+    <div class="depbg" id="depPct" style="width:50%">Dépenses 50%</div>
+    <div class="epbg" id="epPct" style="width:30%">Épargnes 30%</div>
+    <div class="loibg" id="loiPct" style="width:20%">Reste à vivre 20%</div>
+  </div>
+
+  <!-- Carte Épargne projetée -->
+  <div class="proj-card" id="projCard" style="display:none">
+    <div class="proj-title">💰 Épargne projetée</div>
+    <div class="slider-wrap">
+      <span>Rendement&nbsp;:</span>
+      <input type="range" id="rate" min="0" max="20" step="0.5" value="2">
+      <span id="rateVal">2 %</span>
+    </div>
+    <div class="proj-grid">
+      <div class="proj-item"><span>1 an</span><strong id="p1y">—</strong></div>
+      <div class="proj-item"><span>5 ans</span><strong id="p5y">—</strong></div>
+      <div class="proj-item"><span>10 ans</span><strong id="p10y">—</strong></div>
+    </div>
+    <div class="proj-note">Hypothèse : versement mensuel constant avec rendement annuel composé.</div>
+  </div>
+
+  <div class="footer-cta"><a class="cta" href="https://ig.me/m/secrets_de_banquiere" target="_blank">Contactez-moi pour aller plus loin</a></div>
+  <div class="footer-bottom"><button class="reset" id="resetBtn">Réinitialiser</button></div>
+  <div class="ig"><a href="https://ig.me/m/secrets_de_banquiere" target="_blank">@secrets_de_banquiere</a></div>
+</div>
+
+<script>
+const TEXT_MIN=18;
+function euro(n){if(isNaN(n))return'—';const neg=n<0;const s=Math.round(Math.abs(n)).toLocaleString('fr-FR');return(neg?'-':'')+s+' €';}
+function setColor(el,n){el.classList.remove('ok','warn');el.classList.add(n>=0?'ok':'warn');}
+function pct(x,t){if(t<=0)return 0;return Math.max(0,Math.round((x/t)*100));}
+function setBar(el,l,v){el.style.width=v+"%";el.textContent=v>=TEXT_MIN?l+" "+v+"%":"";}
+function compound(monthly,rate,years){if(rate<=0)return monthly*years*12;const r=rate/100/12;return monthly*((Math.pow(1+r,years*12)-1)/r);}
+
+function updateCalcul(){
+  const r=+revenu.value||0,df=+depFixes.value||0,dv=+depVar.value||0,dp=+depProv.value||0,eu=+epUrg.value||0,ei=+epImp.value||0,ep=+epProj.value||0;
+  const d=df+dv+dp,e=eu+ei+ep,l=r-d-e;
+
+  depTotal.textContent=euro(d);epTotal.textContent=euro(e);loisirTotal.textContent=euro(l);revenuTotal.textContent=euro(r);
+  setColor(depTotal,1);setColor(epTotal,1);setColor(revenuTotal,r);setColor(loisirTotal,l);
+  depPct.classList.remove('errorbar');epPct.classList.remove('errorbar');loiPct.classList.remove('errorbar');
+
+  const proj=document.getElementById('projCard');
+
+  if(l<0){
+    depPct.style.width="0%";depPct.textContent="";
+    epPct.style.width="0%";epPct.textContent="";
+    loiPct.style.width="100%";loiPct.textContent="⚠️ Reste à vivre négatif";
+    loiPct.classList.add('errorbar');
+    proj.classList.remove('show');
+    proj.style.display='none';
+    return;
+  }
+
+  let dpct=pct(d,r),epct=pct(e,r),lpct=pct(l,r);
+  if(r>0){const sum=dpct+epct+lpct;if(sum!==100){lpct=Math.max(0,Math.min(100,lpct+(100-sum)));}}
+  setBar(depPct,"Dépenses",dpct);setBar(epPct,"Épargnes",epct);setBar(loiPct,"Reste à vivre",lpct);
+
+  const rate=parseFloat(rateInput.value);
+  rateVal.textContent=rate.toFixed(1).replace('.',',')+" %";
+
+  const p1=document.getElementById('p1y'),p5=document.getElementById('p5y'),p10=document.getElementById('p10y');
+  if(e>0){
+    p1.textContent=euro(compound(e,rate,1));
+    p5.textContent=euro(compound(e,rate,5));
+    p10.textContent=euro(compound(e,rate,10));
+    proj.style.display='block';
+    setTimeout(()=>proj.classList.add('show'),20);
+  }else{
+    proj.classList.remove('show');
+    setTimeout(()=>proj.style.display='none',300);
+  }
+}
+
+const rateInput=document.getElementById('rate');
+rateInput.addEventListener('input',updateCalcul);
+["revenu","depFixes","depVar","depProv","epUrg","epImp","epProj"].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener("input",updateCalcul);
+  el.addEventListener("change",updateCalcul);
+});
+resetBtn.addEventListener("click",e=>{
+  e.preventDefault();
+  revenu.value=4000;depFixes.value=1500;depVar.value=400;depProv.value=100;epUrg.value=400;epImp.value=300;epProj.value=100;
+  rateInput.value=2;
+  updateCalcul();
+});
+updateCalcul();
+</script>
+</body>
+</html>
